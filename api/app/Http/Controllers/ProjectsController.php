@@ -1,9 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Projects;
 use Illuminate\Http\Request;
+
+
+
+
+
 
 class ProjectsController extends Controller
 {
@@ -17,6 +20,46 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
+        
+            
+            $start_date = \DateTime::createFromFormat('m-d-Y', $request->start_date)
+                                        ->format('Y-m-d');
+            
+            
+            if($request->finish_date === null){
+                $finish_date = $request->finish_date;
+            } else{
+                $finish_date = \DateTime::createFromFormat('m-d-Y', $request->finish_date)
+                                    ->format('Y-m-d');
+            }
+            
+            $payload = [
+                'project_id'=>$request->project_id,
+                'name'=>$request->name,
+                'description'=>$request->description,
+                'start_date'=> $start_date,
+                'finish_date'=> $finish_date
+            ];
+                    
+            $project = new Projects($payload);
+            if($project->save()){
+                return response()->json($project, 201);
+
+
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>$e->getMessage(),
+                    "Code"=>400
+                ];
+                return response()->json($response, 400);
+            }
+
+            
+      
+
+        
+
         //
     }
 
