@@ -15,7 +15,17 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+
+            $table->string('project_id');
+
+            $table->timestamp('prevision_finish_date');
+            $table->boolean('isCompleted');
             $table->timestamps();
+
+            $table->foreign('project_id')
+                ->references('project_id')->on('projects')
+                ->onDelete('cascade');
         });
     }
 
