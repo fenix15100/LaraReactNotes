@@ -24,7 +24,7 @@ class ProjectsController extends Controller
 
             return response()->json($projects, 200);
 
-        }catch(\Exception $e){
+        }catch(\Throwable $e){
 
             $response = [
                 "Succesfull"=>false,
@@ -70,7 +70,7 @@ class ProjectsController extends Controller
                 $project->save();
 
                 return response()->json($project, 201);
-            } catch(\Exception $e){
+            } catch(\Throwable $e){
 
                 $response = [
                     "Succesfull"=>false,
@@ -91,12 +91,37 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Projects  $projects
+     * @param  \String  $project_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Projects $projects)
+    public function show(String $project_id)
     {
-        //
+        try {
+            
+          
+            
+            if($project = Projects::where('project_id',$project_id)->first()){
+
+                return response()->json($project, 200);
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>"Resource not Found",
+                    "Code"=>404
+                ];
+                return response()->json($response, 404);  
+            }
+        } catch (\Throwable $e) {
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);  
+        }
+        
+
+
     }
 
 
