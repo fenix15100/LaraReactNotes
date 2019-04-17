@@ -133,7 +133,8 @@ class ProjectsController extends Controller
      */
     public function update(Request $request, String $project_id)
     {
-      
+      #TODO Implementar JSON PATCH porque esta chulo
+      #https://github.com/mikemccabe/json-patch-php/blob/master/src/JsonPatch.php 
         try {
             
             if($project = Projects::where('project_id',$project_id)->first()){
