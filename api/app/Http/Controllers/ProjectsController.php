@@ -98,8 +98,6 @@ class ProjectsController extends Controller
     {
         try {
             
-          
-            
             if($project = Projects::where('project_id',$project_id)->first()){
 
                 return response()->json($project, 200);
@@ -130,12 +128,41 @@ class ProjectsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Projects  $projects
+     * @param  \String $project_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Projects $projects)
+    public function update(Request $request, String $project_id)
     {
-        //
+      
+        try {
+            
+            if($project = Projects::where('project_id',$project_id)->first()){
+
+                foreach ($request->all() as $key => $value) {
+
+                    if($key === 'project_id') continue;
+                    $project->$key = $value;
+                }
+                $project->save();
+
+                return response('',204);
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>"Resource not Found",
+                    "Code"=>404
+                ];
+                return response()->json($response, 404);  
+            }
+        } catch (\Throwable $e) {
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);  
+        }
+        
     }
 
     /**
@@ -144,8 +171,31 @@ class ProjectsController extends Controller
      * @param  \App\Projects  $projects
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Projects $projects)
+    public function destroy(String $project_id)
     {
-        //
+        try {
+            
+            if($project = Projects::where('project_id',$project_id)->first()){
+
+                $project->delete();
+                return response()->json('', 204);
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>"Resource not Found",
+                    "Code"=>404
+                ];
+                return response()->json($response, 404);  
+            }
+        } catch (\Throwable $e) {
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);  
+        }
+        
+        
     }
 }
