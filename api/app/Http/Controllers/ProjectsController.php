@@ -70,7 +70,7 @@ class ProjectsController extends Controller
                 $project->save();
 
                 return response()->json($project, 201);
-            } catch(\Throwable $e){
+            }catch(\Throwable $e){
 
                 $response = [
                     "Succesfull"=>false,
@@ -109,7 +109,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        } catch (\Throwable $e) {
+        }catch (\Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),
@@ -154,7 +154,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        } catch (\Throwable $e) {
+        }catch (\Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),
@@ -187,7 +187,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        } catch (\Throwable $e) {
+        }catch (\Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),
