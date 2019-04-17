@@ -49,13 +49,11 @@ class ProjectsController extends Controller
             
             $start_date = \DateTime::createFromFormat('m-d-Y', $request->start_date)
                                         ->format('Y-m-d');
-            
-            
             if($request->finish_date === null){
                 $finish_date = $request->finish_date;
             } else{
                 $finish_date = \DateTime::createFromFormat('m-d-Y', $request->finish_date)
-                                    ->format('Y-m-d');
+                                     ->format('Y-m-d');
             }
             
             $payload = [
@@ -142,6 +140,22 @@ class ProjectsController extends Controller
                 foreach ($request->all() as $key => $value) {
 
                     if($key === 'project_id') continue;
+
+                    if($key === 'start_date' || $key === 'finish_date'){
+                        $start_date = \DateTime::createFromFormat('m-d-Y', $request->start_date)
+                             ->format('Y-m-d');
+
+                        if($request->finish_date === null){
+                        $finish_date = $request->finish_date;
+                        }
+                        else{
+                        $finish_date = \DateTime::createFromFormat('m-d-Y', $request->finish_date)
+                                            ->format('Y-m-d');
+                        }
+
+
+                    }
+
                     $project->$key = $value;
                 }
                 $project->save();
