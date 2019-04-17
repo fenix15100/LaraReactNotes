@@ -20,6 +20,8 @@ class ProjectsController extends Controller
         try{
             $projects = Projects::all();
 
+            if (count($projects)===0) return response()->json($projects, 404);
+
             return response()->json($projects, 200);
 
         }catch(\Exception $e){
