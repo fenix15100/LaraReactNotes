@@ -40,23 +40,23 @@ class ProjectsController extends Controller
                 'start_date'=> $start_date,
                 'finish_date'=> $finish_date
             ];
-                    
-            $project = new Projects($payload);
-            if($project->save()){
+            try{
+                $project = new Projects($payload);
+                $project->save();
+
                 return response()->json($project, 201);
+            } catch(\Exception $e){
 
-
-            }else{
                 $response = [
                     "Succesfull"=>false,
                     "Error"=>$e->getMessage(),
-                    "Code"=>400
+                    "Code"=>500
                 ];
-                return response()->json($response, 400);
-            }
-
+                return response()->json($response, 500);
+            }       
             
-      
+                
+
 
         
 
