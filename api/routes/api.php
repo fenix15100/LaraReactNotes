@@ -23,14 +23,16 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
   
   
     Route::resource('projects', 'ProjectsController', [
-        'only' => ['store', 
+        'only' => ['index',
+                   'store', 
                    'show',
                    'update',
                    'destroy']
     ]);
 
     Route::resource('tasks', 'TaskController', [
-        'only' => ['store', 
+        'only' => ['index',
+                   'store', 
                    'show',
                    'update',
                    'destroy']

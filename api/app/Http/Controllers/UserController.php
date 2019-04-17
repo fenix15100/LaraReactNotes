@@ -36,7 +36,7 @@ class UserController extends Controller
             $user->auth_token = $token;
             $user->save();
             $response = ['success'=>true, 'data'=>['id'=>$user->id,'auth_token'=>$user->auth_token,'name'=>$user->name, 'email'=>$user->email]]; 
-            return response()->json($response, 201);          
+            return response()->json($response, 200);          
         }
         else 
           $response = ['success'=>false, 'data'=>'Record doesnt exists'];

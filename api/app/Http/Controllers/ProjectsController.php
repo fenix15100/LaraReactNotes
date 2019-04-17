@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 use App\Projects;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -10,7 +10,30 @@ use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
-   
+   /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        try{
+            $projects = Projects::all();
+
+            return response()->json($projects, 200);
+
+        }catch(\Exception $e){
+
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);
+        }
+        
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -60,7 +83,7 @@ class ProjectsController extends Controller
 
         
 
-        //
+        
     }
 
     /**
