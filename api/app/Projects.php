@@ -17,6 +17,13 @@ class Projects extends Model
         'finish_date',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children(){
+        return $this->hasMany( 'App\Task', 'project_id', 'project_id' );
+    }
+
 
 
 }

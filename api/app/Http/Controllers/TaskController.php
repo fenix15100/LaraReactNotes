@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use DateTime;
 use Illuminate\Http\Request;
+use Throwable;
 
 class TaskController extends Controller
 {
@@ -14,18 +16,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +29,28 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $prevision_finish_date = DateTime::createFromFormat('m-d-Y', $request->prevision_finish_date)
+            ->format('Y-m-d');
+        $payload = [
+            'project_id'=>$request->project_id,
+            'name'=>$request->name,
+            'prevision_finish_date'=> $request->prevision_finish_date,
+            'isCompleted'=> $request->$prevision_finish_date
+        ];
+        try{
+            $task = new Task($payload);
+            $task->save();
+
+            return response()->json($task, 201);
+        }catch(Throwable $e){
+
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);
+        }
     }
 
     /**
@@ -49,16 +64,7 @@ class TaskController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.

@@ -19,6 +19,12 @@ class ProjectsController extends Controller
         try{
             $projects = Projects::all();
 
+            foreach ($projects as $p){
+                $tasks = $p->children()->get();
+                $relations = ['HasMany'=>['tasks'=>$tasks]];
+                $p->relations = $relations;
+            }
+
             if (count($projects)===0) return response()->json($projects, 404);
 
             return response()->json($projects, 200);
@@ -44,8 +50,6 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        
-            
             $start_date = DateTime::createFromFormat('m-d-Y', $request->start_date)
                                         ->format('Y-m-d');
             if($request->finish_date === null){
@@ -76,13 +80,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 500);
             }       
-            
-                
 
-
-        
-
-        
     }
 
     /**
@@ -96,6 +94,9 @@ class ProjectsController extends Controller
         try {
             
             if($project = Projects::where('project_id',$project_id)->first()){
+                $tasks = $project->children()->get();
+                $relations = ['HasMany'=>['tasks'=>$tasks]];
+                $project->relations = $relations;
 
                 return response()->json($project, 200);
             }else{
