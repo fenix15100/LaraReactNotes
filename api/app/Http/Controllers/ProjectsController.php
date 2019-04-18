@@ -94,7 +94,7 @@ class ProjectsController extends Controller
         try {
             
             if($project = Projects::where('project_id',$project_id)->first()){
-                $tasks = $project->children()->get();
+                $tasks = $project->getTasks()->get();
                 $relations = ['HasMany'=>['tasks'=>$tasks]];
                 $project->relations = $relations;
 
