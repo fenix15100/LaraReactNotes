@@ -1,11 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 use App\Projects;
+use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-
-
+use Illuminate\Http\Response;
+use Throwable;
 
 
 class ProjectsController extends Controller
@@ -13,7 +12,7 @@ class ProjectsController extends Controller
    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -24,7 +23,7 @@ class ProjectsController extends Controller
 
             return response()->json($projects, 200);
 
-        }catch(\Throwable $e){
+        }catch(Throwable $e){
 
             $response = [
                 "Succesfull"=>false,
@@ -40,19 +39,19 @@ class ProjectsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
         
             
-            $start_date = \DateTime::createFromFormat('m-d-Y', $request->start_date)
+            $start_date = DateTime::createFromFormat('m-d-Y', $request->start_date)
                                         ->format('Y-m-d');
             if($request->finish_date === null){
                 $finish_date = $request->finish_date;
             } else{
-                $finish_date = \DateTime::createFromFormat('m-d-Y', $request->finish_date)
+                $finish_date = DateTime::createFromFormat('m-d-Y', $request->finish_date)
                                      ->format('Y-m-d');
             }
             
@@ -68,7 +67,7 @@ class ProjectsController extends Controller
                 $project->save();
 
                 return response()->json($project, 201);
-            }catch(\Throwable $e){
+            }catch(Throwable $e){
 
                 $response = [
                     "Succesfull"=>false,
@@ -89,8 +88,8 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \String  $project_id
-     * @return \Illuminate\Http\Response
+     * @param String $project_id
+     * @return Response
      */
     public function show(String $project_id)
     {
@@ -107,7 +106,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        }catch (\Throwable $e) {
+        }catch (Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),
@@ -125,9 +124,9 @@ class ProjectsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \String $project_id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param String $project_id
+     * @return Response
      */
     public function update(Request $request, String $project_id)
     {
@@ -136,27 +135,32 @@ class ProjectsController extends Controller
         try {
             
             if($project = Projects::where('project_id',$project_id)->first()){
-
+                
+                
                 foreach ($request->all() as $key => $value) {
 
                     if($key === 'project_id') continue;
 
-                    if($key === 'start_date' || $key === 'finish_date'){
-                        $start_date = \DateTime::createFromFormat('m-d-Y', $request->start_date)
+                    if($key === 'start_date'){
+                        $start_date = DateTime::createFromFormat('m-d-Y', $request->start_date)
                              ->format('Y-m-d');
-
-                        if($request->finish_date === null){
-                        $finish_date = $request->finish_date;
-                        }
-                        else{
-                        $finish_date = \DateTime::createFromFormat('m-d-Y', $request->finish_date)
-                                            ->format('Y-m-d');
-                        }
-
-
+                        $project->$key = $start_date;
                     }
 
-                    $project->$key = $value;
+                    elseif($key === 'finish_date'){
+                        if($request->finish_date === null){
+                            $finish_date = $request->finish_date;
+                        }
+                        else{
+                            $finish_date = DateTime::createFromFormat('m-d-Y', $request->finish_date)
+                                ->format('Y-m-d');
+                        }
+                        $project->$key=$finish_date;
+                    }else{
+                        $project->$key = $value;
+                    }
+
+
                 }
                 $project->save();
 
@@ -169,7 +173,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        }catch (\Throwable $e) {
+        }catch (Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),
@@ -183,8 +187,8 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Projects  $projects
-     * @return \Illuminate\Http\Response
+     * @param String $project_id
+     * @return Response
      */
     public function destroy(String $project_id)
     {
@@ -202,7 +206,7 @@ class ProjectsController extends Controller
                 ];
                 return response()->json($response, 404);  
             }
-        }catch (\Throwable $e) {
+        }catch (Throwable $e) {
             $response = [
                 "Succesfull"=>false,
                 "Error"=>$e->getMessage(),

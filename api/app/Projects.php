@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static where(string $string, String $project_id)
+ */
 class Projects extends Model
 {
     protected $fillable = [
@@ -14,5 +17,6 @@ class Projects extends Model
         'finish_date',
     ];
 
-    
+
+
 }
