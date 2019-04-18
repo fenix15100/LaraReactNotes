@@ -12,7 +12,7 @@ class Task extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function parent(){
+    public function getProject(){
         return $this->hasOne( 'App\Projects', 'project_id', 'project_id' );
     }
 }

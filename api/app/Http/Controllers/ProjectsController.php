@@ -20,7 +20,7 @@ class ProjectsController extends Controller
             $projects = Projects::all();
 
             foreach ($projects as $p){
-                $tasks = $p->children()->get();
+                $tasks = $p->getTasks()->get();
                 $relations = ['HasMany'=>['tasks'=>$tasks]];
                 $p->relations = $relations;
             }

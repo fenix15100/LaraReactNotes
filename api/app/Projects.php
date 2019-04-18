@@ -20,7 +20,7 @@ class Projects extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function children(){
+    public function getTasks(){
         return $this->hasMany( 'App\Task', 'project_id', 'project_id' );
     }
 
