@@ -6,7 +6,6 @@ use App\Task;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use phpDocumentor\Reflection\Types\Integer;
 use Throwable;
 
 class TaskController extends Controller
@@ -58,7 +57,7 @@ class TaskController extends Controller
         $payload = [
             'project_id'=>$request->project_id,
             'name'=>$request->name,
-            'prevision_finish_date'=> $request->$prevision_finish_date,
+            'prevision_finish_date'=> $prevision_finish_date,
             'isCompleted'=> $request->isCompleted
         ];
         try{
@@ -80,7 +79,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Integer $id
+     * @param String $id
      * @return Response
      */
     public function show(String $id)
@@ -117,22 +116,75 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Task $task
+     * @param String $id
      * @return Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request,String $id)
     {
-        //
+        try {
+            if($task = Task::find($id)){
+
+                foreach ($request->all() as $key => $value) {
+
+                    if($key === 'prevision_finish_date'){
+                        $prevision_finish_date = DateTime::createFromFormat('m-d-Y', $request->prevision_finish_date)
+                            ->format('Y-m-d');
+                        $task->$key = $prevision_finish_date;
+                    }else{
+                        $task->$key = $value;
+                    }
+                }
+                $task->save();
+
+                return response('',204);
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>"Resource not Found",
+                    "Code"=>404
+                ];
+                return response()->json($response, 404);
+            }
+        }catch (Throwable $e) {
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Task $task
+     * @param String $id
      * @return Response
      */
-    public function destroy(Task $task)
+    public function destroy(String $id)
     {
-        //
+        try {
+
+            if($task = Task::where('id',$id)->first()){
+
+                $task->delete();
+                return response()->json('', 204);
+            }else{
+                $response = [
+                    "Succesfull"=>false,
+                    "Error"=>"Resource not Found",
+                    "Code"=>404
+                ];
+                return response()->json($response, 404);
+            }
+        }catch (Throwable $e) {
+            $response = [
+                "Succesfull"=>false,
+                "Error"=>$e->getMessage(),
+                "Code"=>500
+            ];
+            return response()->json($response, 500);
+        }
+
     }
 }
